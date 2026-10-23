@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CloseIcon } from '../icons/Icons.jsx';
+import { CloseIcon, LightningIcon, CeramicVaseIcon } from '../icons/Icons.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import './AuthModal.css';
@@ -116,10 +116,10 @@ export default function AuthModal({ isOpen, onClose, onToast }) {
           <span className="quick-label">{lang === 'uz' ? 'Tezkor sinov hisoblari:' : 'Quick Demo Logins:'}</span>
           <div className="quick-buttons">
             <button type="button" className="quick-btn admin-demo" onClick={handleQuickAdmin}>
-              ⚡ {lang === 'uz' ? 'Admin sifatida kirish' : 'Admin Demo'}
+              <LightningIcon size={13} color="#92400E" /> {lang === 'uz' ? 'Admin sifatida kirish' : 'Admin Demo'}
             </button>
             <button type="button" className="quick-btn user-demo" onClick={handleQuickUser}>
-              🏺 {lang === 'uz' ? 'Mijoz (Patron) kirish' : 'Patron Demo'}
+              <CeramicVaseIcon size={14} color="#78350F" /> {lang === 'uz' ? 'Mijoz (Patron) kirish' : 'Patron Demo'}
             </button>
           </div>
         </div>
@@ -176,7 +176,7 @@ export default function AuthModal({ isOpen, onClose, onToast }) {
                     checked={role === 'user'}
                     onChange={() => setRole('user')}
                   />
-                  <span>🏺 {lang === 'uz' ? 'Mijoz / Patron' : 'Patron Collector'}</span>
+                  <span><CeramicVaseIcon size={13} color="currentColor" /> {lang === 'uz' ? 'Mijoz / Patron' : 'Patron Collector'}</span>
                 </label>
                 <label className={`role-pill ${role === 'admin' ? 'active' : ''}`}>
                   <input
@@ -185,7 +185,7 @@ export default function AuthModal({ isOpen, onClose, onToast }) {
                     checked={role === 'admin'}
                     onChange={() => setRole('admin')}
                   />
-                  <span>⚡ {lang === 'uz' ? 'Studiya Admin' : 'Studio Admin'}</span>
+                  <span><LightningIcon size={13} color="currentColor" /> {lang === 'uz' ? 'Studiya Admin' : 'Studio Admin'}</span>
                 </label>
               </div>
             </div>

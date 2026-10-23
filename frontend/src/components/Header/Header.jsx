@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { LightningIcon } from '../icons/Icons.jsx';
 import './Header.css';
 
 export default function Header({
@@ -104,8 +105,8 @@ export default function Header({
               onClick={onOpenAdminPortal}
               title="Open Full Studio Director Portal"
             >
-              <span className="admin-pulsing-dot" />
-              <span>⚡ Studio Admin</span>
+              <LightningIcon size={12} color="#92400E" />
+              <span>Studio Admin</span>
             </button>
           )}
 

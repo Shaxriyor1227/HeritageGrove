@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CloseIcon } from '../icons/Icons.jsx';
+import {
+  CloseIcon,
+  LightningIcon,
+  CeramicVaseIcon,
+  PackageBoxIcon,
+  SettingsIcon,
+  GlobeAltIcon,
+  UserCircleIcon,
+  BellAlertIcon,
+  DeliveryTruckIcon,
+  SanctuaryHomeIcon,
+  TeaCupIcon,
+  ShieldLockIcon,
+  DiamondSparkleIcon,
+} from '../icons/Icons.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import { useAuth } from '../../context/AuthContext.jsx';
 import './UserProfileModal.css';
@@ -131,9 +145,22 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
               <p className="profile-email-sub">{user?.email || formData.email}</p>
               <div className="profile-patron-meta">
                 <span className={`profile-tier-badge ${user?.role === 'admin' ? 'admin' : ''}`}>
-                  {user?.role === 'admin' ? '⚡ Studio Director' : '🏺 Master Collector'}
+                  {user?.role === 'admin' ? (
+                    <>
+                      <LightningIcon size={13} color="#92400E" />
+                      <span>Studio Director</span>
+                    </>
+                  ) : (
+                    <>
+                      <CeramicVaseIcon size={13} color="#C46D4B" />
+                      <span>Master Collector</span>
+                    </>
+                  )}
                 </span>
-                <span className="profile-points-pill">✨ {user?.guildPoints || 480} pts</span>
+                <span className="profile-points-pill">
+                  <DiamondSparkleIcon size={12} color="#C46D4B" />
+                  <span>{user?.guildPoints || 480} pts</span>
+                </span>
               </div>
             </div>
           </div>
@@ -147,7 +174,8 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                 if (onOpenAdminPortal) onOpenAdminPortal();
               }}
             >
-              ⚡ {lang === 'uz' ? 'To\'liq Admin Panelini Ochish' : 'Open Full Studio Portal'}
+              <LightningIcon size={14} color="#92400E" />
+              <span>{lang === 'uz' ? 'To\'liq Admin Panelini Ochish' : 'Open Full Studio Portal'}</span>
             </button>
           )}
         </div>
@@ -158,19 +186,22 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
             className={`profile-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
             onClick={() => setActiveTab('orders')}
           >
-            📦 <span>{lang === 'uz' ? 'Sotib Olinganlar' : 'Purchased Items'}</span>
+            <PackageBoxIcon size={16} />
+            <span>{lang === 'uz' ? 'Sotib Olinganlar' : 'Purchased Items'}</span>
           </button>
           <button
             className={`profile-tab-btn ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
-            🏺 <span>{lang === 'uz' ? 'Gildiya Haqida' : 'About & Guild'}</span>
+            <CeramicVaseIcon size={16} />
+            <span>{lang === 'uz' ? 'Gildiya Haqida' : 'About & Guild'}</span>
           </button>
           <button
             className={`profile-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
-            ⚙️ <span>{lang === 'uz' ? 'Sozlamalar' : 'Settings'}</span>
+            <SettingsIcon size={16} />
+            <span>{lang === 'uz' ? 'Sozlamalar' : 'Settings'}</span>
           </button>
         </div>
 
@@ -208,12 +239,16 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                       </div>
                       <div className="timeline-connector in-progress" />
                       <div className={`timeline-step ${order.status === 'Shipped' || order.status === 'Delivered' ? 'completed' : 'active'}`}>
-                        <div className="step-circle">🚚</div>
+                        <div className="step-circle">
+                          <DeliveryTruckIcon size={14} color="currentColor" />
+                        </div>
                         <span className="step-label">{t('track_packaging')}</span>
                       </div>
                       <div className="timeline-connector" />
                       <div className={`timeline-step ${order.status === 'Delivered' ? 'completed' : ''}`}>
-                        <div className="step-circle">🏡</div>
+                        <div className="step-circle">
+                          <SanctuaryHomeIcon size={14} color="currentColor" />
+                        </div>
                         <span className="step-label">{t('track_delivered')}</span>
                       </div>
                     </div>
@@ -260,7 +295,9 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
 
               <div className="guild-perks-list">
                 <div className="guild-perk-item">
-                  <span className="perk-icon">🏺</span>
+                  <span className="perk-icon">
+                    <CeramicVaseIcon size={20} color="var(--ink)" />
+                  </span>
                   <div>
                     <strong>{lang === 'uz' ? 'Yagona Nusxadagi Xumdon Asarlari' : 'Private Kiln Drops Access'}</strong>
                     <p>{lang === 'uz' ? 'Katalogga chiqmasdan oldin xumdondan chiqqan noyob vazalarni birinchilardan bo\'lib band qilish huquqi.' : 'Reserve 1-of-1 wood-fired works before public release.'}</p>
@@ -268,7 +305,9 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                 </div>
 
                 <div className="guild-perk-item">
-                  <span className="perk-icon">🍵</span>
+                  <span className="perk-icon">
+                    <TeaCupIcon size={20} color="var(--ink)" />
+                  </span>
                   <div>
                     <strong>{lang === 'uz' ? 'Bosh Usta Bilan Shaxsiy Maslahat' : 'Studio Potter Consultation'}</strong>
                     <p>{lang === 'uz' ? 'Xonadoningiz yoki stolingiz uchun maxsus o\'lchamdagi idishlar bo\'yicha bepul onlayn konsultatsiya.' : 'Complimentary 1-on-1 virtual design consultation for bespoke dining sets.'}</p>
@@ -276,7 +315,9 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                 </div>
 
                 <div className="guild-perk-item">
-                  <span className="perk-icon">🛡️</span>
+                  <span className="perk-icon">
+                    <ShieldLockIcon size={20} color="var(--ink)" />
+                  </span>
                   <div>
                     <strong>{lang === 'uz' ? 'Abadiy Sopol Kafolati' : 'Lifetime Heirloom Assurance'}</strong>
                     <p>{lang === 'uz' ? '1,320°C haroratda toshga aylangan ekologik toza tabiiy gil mahsulotlari.' : 'High-density vitrified stoneware crafted to endure generations of daily touch.'}</p>
@@ -293,7 +334,8 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
             <form onSubmit={handleSaveSettings} className="settings-form">
               {/* LANGUAGE SWITCHER INSIDE SETTINGS AS REQUESTED */}
               <div className="settings-section-title">
-                🌐 {lang === 'uz' ? 'Tizim Tili va Valyuta' : 'Language & Display Currency'}
+                <GlobeAltIcon size={16} color="#C46D4B" />
+                <span>{lang === 'uz' ? 'Tizim Tili va Valyuta' : 'Language & Display Currency'}</span>
               </div>
 
               <div className="settings-grid">
@@ -329,8 +371,9 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                 </div>
               </div>
 
-              <div className="settings-section-title" style={{ marginTop: '0.5rem' }}>
-                👤 {lang === 'uz' ? 'Shaxsiy Ma\'lumotlar' : 'Personal Information'}
+              <div className="settings-section-title" style={{ marginTop: '0.75rem' }}>
+                <UserCircleIcon size={16} color="#C46D4B" />
+                <span>{lang === 'uz' ? 'Shaxsiy Ma\'lumotlar' : 'Personal Information'}</span>
               </div>
 
               <div className="settings-grid">
@@ -377,8 +420,9 @@ export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdmin
                 </div>
               </div>
 
-              <div className="settings-section-title" style={{ marginTop: '0.5rem' }}>
-                🔔 {lang === 'uz' ? 'Xabarnomalar' : 'Notifications'}
+              <div className="settings-section-title" style={{ marginTop: '0.75rem' }}>
+                <BellAlertIcon size={16} color="#C46D4B" />
+                <span>{lang === 'uz' ? 'Xabarnomalar' : 'Notifications'}</span>
               </div>
 
               <div className="settings-toggle-row">

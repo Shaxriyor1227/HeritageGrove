@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { CloseIcon, TrashIcon } from '../icons/Icons.jsx';
+import {
+  CloseIcon,
+  TrashIcon,
+  LightningIcon,
+  ChartDashboardIcon,
+  CeramicVaseIcon,
+  OrdersListIcon,
+  MailEnvelopIcon,
+} from '../icons/Icons.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import { products as fallbackProducts } from '../../data/products.js';
 import './AdminDashboardModal.css';
@@ -156,7 +164,10 @@ export default function AdminDashboardModal({ isOpen, onClose, onToast }) {
         {/* Admin Header */}
         <div className="admin-header">
           <div className="admin-header-left">
-            <span className="admin-badge">⚡ {lang === 'uz' ? 'Boshqaruv Markazi' : 'Studio Director Mode'}</span>
+            <span className="admin-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <LightningIcon size={12} color="#92400E" />
+              <span>{lang === 'uz' ? 'Boshqaruv Markazi' : 'Studio Director Mode'}</span>
+            </span>
             <h3 className="admin-title">{t('admin_title')}</h3>
             <p className="admin-subtitle">{t('admin_subtitle')}</p>
           </div>
@@ -168,25 +179,29 @@ export default function AdminDashboardModal({ isOpen, onClose, onToast }) {
             className={`admin-tab-btn ${activeTab === 'metrics' ? 'active' : ''}`}
             onClick={() => setActiveTab('metrics')}
           >
-            📊 <span>{t('admin_tab_metrics')}</span>
+            <ChartDashboardIcon size={14} color="currentColor" />
+            <span>{t('admin_tab_metrics')}</span>
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'products' ? 'active' : ''}`}
             onClick={() => setActiveTab('products')}
           >
-            🏺 <span>{t('admin_tab_products')} ({productsList.length})</span>
+            <CeramicVaseIcon size={14} color="currentColor" />
+            <span>{t('admin_tab_products')} ({productsList.length})</span>
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
             onClick={() => setActiveTab('orders')}
           >
-            📋 <span>{t('admin_tab_orders')} ({ordersList.length})</span>
+            <OrdersListIcon size={14} color="currentColor" />
+            <span>{t('admin_tab_orders')} ({ordersList.length})</span>
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'subscribers' ? 'active' : ''}`}
             onClick={() => setActiveTab('subscribers')}
           >
-            ✉️ <span>{t('admin_tab_subscribers')}</span>
+            <MailEnvelopIcon size={14} color="currentColor" />
+            <span>{t('admin_tab_subscribers')}</span>
           </button>
         </div>
 

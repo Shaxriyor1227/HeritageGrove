@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
-import { TrashIcon } from '../icons/Icons.jsx';
+import {
+  TrashIcon,
+  LightningIcon,
+  ChartDashboardIcon,
+  CeramicVaseIcon,
+  OrdersListIcon,
+  MailEnvelopIcon,
+} from '../icons/Icons.jsx';
 import { products as fallbackProducts } from '../../data/products.js';
 import './AdminStudioPortal.css';
 
@@ -160,7 +167,10 @@ export default function AdminStudioPortal({ onReturnToGallery, onToast }) {
           <span className="admin-brand-seal">HG</span>
           <div>
             <h1 className="admin-brand-name">Heritage Grove</h1>
-            <span className="admin-brand-role">⚡ Studio Director Portal</span>
+            <span className="admin-brand-role">
+              <LightningIcon size={12} color="#ECC94B" />
+              <span>Studio Director Portal</span>
+            </span>
           </div>
         </div>
 
@@ -196,7 +206,7 @@ export default function AdminStudioPortal({ onReturnToGallery, onToast }) {
               className={`admin-nav-link ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => setActiveTab('overview')}
             >
-              <span className="nav-icon">📊</span>
+              <ChartDashboardIcon size={18} />
               <span>{lang === 'uz' ? 'Umumiy Hisobot' : 'Overview & KPIs'}</span>
             </button>
 
@@ -204,7 +214,7 @@ export default function AdminStudioPortal({ onReturnToGallery, onToast }) {
               className={`admin-nav-link ${activeTab === 'catalog' ? 'active' : ''}`}
               onClick={() => setActiveTab('catalog')}
             >
-              <span className="nav-icon">🏺</span>
+              <CeramicVaseIcon size={18} />
               <span>{lang === 'uz' ? 'Katalog Boshqaruvi' : 'Vessel Catalog'}</span>
               <span className="nav-badge-count">{productList.length}</span>
             </button>
@@ -213,7 +223,7 @@ export default function AdminStudioPortal({ onReturnToGallery, onToast }) {
               className={`admin-nav-link ${activeTab === 'orders' ? 'active' : ''}`}
               onClick={() => setActiveTab('orders')}
             >
-              <span className="nav-icon">📋</span>
+              <OrdersListIcon size={18} />
               <span>{lang === 'uz' ? 'Buyurtmalar' : 'Live Orders'}</span>
               <span className="nav-badge-count">{ordersList.length}</span>
             </button>
@@ -222,7 +232,7 @@ export default function AdminStudioPortal({ onReturnToGallery, onToast }) {
               className={`admin-nav-link ${activeTab === 'subscribers' ? 'active' : ''}`}
               onClick={() => setActiveTab('subscribers')}
             >
-              <span className="nav-icon">✉️</span>
+              <MailEnvelopIcon size={18} />
               <span>{lang === 'uz' ? 'Obunachilar' : 'Subscribers & CRM'}</span>
             </button>
           </nav>

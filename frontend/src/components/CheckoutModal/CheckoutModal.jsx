@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CloseIcon } from '../icons/Icons.jsx';
+import {
+  CloseIcon,
+  CreditCardIcon,
+  DeliveryTruckIcon,
+  PackageBoxIcon,
+  InfoBadgeIcon,
+  PulseDotIcon,
+  CheckCircleIcon,
+} from '../icons/Icons.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
 import './CheckoutModal.css';
 
@@ -178,11 +186,31 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
               </div>
               <div className="receipt-info-item">
                 <span className="receipt-label">{t('receipt_payment_type')}</span>
-                <span className="receipt-val payment-tag-badge">
-                  {placedOrder.payment_method === 'payme' && '🔵 Payme (Test Preview)'}
-                  {placedOrder.payment_method === 'click' && '🟢 Click Up (Test Preview)'}
-                  {placedOrder.payment_method === 'card' && '💳 Bank Card (Visa/Uzcard)'}
-                  {placedOrder.payment_method === 'cash_on_delivery' && '🚚 Courier on Delivery'}
+                <span className="receipt-val payment-tag-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  {placedOrder.payment_method === 'payme' && (
+                    <>
+                      <PulseDotIcon size={8} color="#0099ff" />
+                      <span>Payme (Test Preview)</span>
+                    </>
+                  )}
+                  {placedOrder.payment_method === 'click' && (
+                    <>
+                      <PulseDotIcon size={8} color="#00c853" />
+                      <span>Click Up (Test Preview)</span>
+                    </>
+                  )}
+                  {placedOrder.payment_method === 'card' && (
+                    <>
+                      <CreditCardIcon size={14} color="#8A583A" />
+                      <span>Bank Card (Visa/Uzcard)</span>
+                    </>
+                  )}
+                  {placedOrder.payment_method === 'cash_on_delivery' && (
+                    <>
+                      <DeliveryTruckIcon size={14} color="#8A583A" />
+                      <span>Courier on Delivery</span>
+                    </>
+                  )}
                 </span>
               </div>
               <div className="receipt-info-item">
@@ -423,7 +451,7 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
                   {formData.payment_method === 'payme' && (
                     <div className="payme-visual-panel">
                       <div className="visual-notice">
-                        <span className="notice-icon">ℹ️</span>
+                        <span className="notice-icon"><InfoBadgeIcon size={14} color="#0099ff" /></span>
                         <span>{t('pay_test_notice')}</span>
                       </div>
                       <label className="input-label">Payme Registered Phone Number</label>
@@ -434,8 +462,9 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
                         onChange={(e) => setPaymePhone(e.target.value)}
                         placeholder="+998 90 123 45 67"
                       />
-                      <div className="simulation-hint">
-                        🔵 {lang === 'uz' ? 'Buyurtma tasdiqlangach, Payme ilovangizga invoys yo\'llanadi.' : 'Payment invoice will simulate dispatching to your Payme account.'}
+                      <div className="simulation-hint" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <PulseDotIcon size={8} color="#0099ff" />
+                        <span>{lang === 'uz' ? 'Buyurtma tasdiqlangach, Payme ilovangizga invoys yo\'llanadi.' : 'Payment invoice will simulate dispatching to your Payme account.'}</span>
                       </div>
                     </div>
                   )}
@@ -443,7 +472,7 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
                   {formData.payment_method === 'click' && (
                     <div className="click-visual-panel">
                       <div className="visual-notice">
-                        <span className="notice-icon">ℹ️</span>
+                        <span className="notice-icon"><InfoBadgeIcon size={14} color="#00c853" /></span>
                         <span>{t('pay_test_notice')}</span>
                       </div>
                       <label className="input-label">Click Mobile Phone / ID</label>
@@ -454,8 +483,9 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
                         onChange={(e) => setClickPhone(e.target.value)}
                         placeholder="+998 93 987 65 43"
                       />
-                      <div className="simulation-hint">
-                        🟢 {lang === 'uz' ? '*880# USSD yoki Click Evolution ilovasida to\'lov so\'rovi ko\'rinadi.' : 'Simulated USSD / Click Evolution request notification.'}
+                      <div className="simulation-hint" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <PulseDotIcon size={8} color="#00c853" />
+                        <span>{lang === 'uz' ? '*880# USSD yoki Click Evolution ilovasida to\'lov so\'rovi ko\'rinadi.' : 'Simulated USSD / Click Evolution request notification.'}</span>
                       </div>
                     </div>
                   )}
@@ -515,7 +545,10 @@ export default function CheckoutModal({ isOpen, onClose, items, total, onOrderSu
                   {formData.payment_method === 'cash_on_delivery' && (
                     <div className="cash-visual-panel">
                       <div className="cash-notice-box">
-                        📦 <strong>{lang === 'uz' ? 'Qo\'ldan-qo\'lga xizmat:' : 'White-Glove Courier Delivery:'}</strong>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <PackageBoxIcon size={16} color="#8A583A" />
+                          <strong>{lang === 'uz' ? 'Qo\'ldan-qo\'lga xizmat:' : 'White-Glove Courier Delivery:'}</strong>
+                        </div>
                         <p style={{ margin: '0.4rem 0 0', fontSize: '0.85rem', color: 'var(--ink-soft)' }}>
                           {lang === 'uz'
                             ? 'Buyumlar xavfsiz qutilarda yetib keladi. Kuryer huzurida ochib ko\'rib, naqd pul yoki Uzcard/Humo terminali orqali to\'lashingiz mumkin.'
