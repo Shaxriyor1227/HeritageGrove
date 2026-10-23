@@ -135,9 +135,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   transition: all 0.2s;
   white-space: nowrap;
+}
+
+.profile-tab-btn svg {
+  flex-shrink: 0;
+  display: block;
 }
 
 .profile-tab-btn.active {
@@ -360,13 +365,21 @@
 }
 
 .settings-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #C46D4B;
   font-weight: 700;
   border-bottom: 1px solid rgba(23, 90, 103, 0.1);
-  padding-bottom: 0.4rem;
+  padding-bottom: 0.45rem;
+}
+
+.settings-section-title svg {
+  flex-shrink: 0;
+  display: block;
 }
 
 .settings-grid {

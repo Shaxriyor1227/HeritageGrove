@@ -137,13 +137,22 @@
 
 .quick-btn {
   border: none;
-  padding: 0.5rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 8px;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   text-align: center;
+}
+
+.quick-btn svg {
+  flex-shrink: 0;
+  display: block;
 }
 
 .quick-btn.admin-demo {
@@ -226,6 +235,17 @@
   font-weight: 600;
   color: var(--ink);
   transition: all 0.2s;
+}
+
+.role-pill span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.role-pill span svg {
+  flex-shrink: 0;
+  display: block;
 }
 
 .role-pill input {

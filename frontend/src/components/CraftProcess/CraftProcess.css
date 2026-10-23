@@ -209,6 +209,11 @@
   font-weight: 500;
 }
 
+.process-meta-item svg {
+  flex-shrink: 0;
+  display: block;
+}
+
 .process-nav-controls {
   display: flex;
   gap: 1rem;

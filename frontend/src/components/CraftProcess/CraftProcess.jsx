@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext.jsx';
+import { CheckCircleIcon } from '../icons/Icons.jsx';
 import './CraftProcess.css';
 
 const processSteps = [
@@ -89,58 +90,68 @@ export default function CraftProcess() {
               onClick={() => setActiveStep(idx)}
             >
               <span className="tab-step-num">{step.step}</span>
-              <span className="tab-step-phase">
-                {lang === 'uz' ? step.phase_uz : step.phase}
-              </span>
+              <div className="tab-text-wrap">
+                <span className="tab-phase-name">
+                  Phase {step.step} • {lang === 'uz' ? step.phase_uz : step.phase}
+                </span>
+                <span className="tab-title-name">
+                  {lang === 'uz' ? step.title_uz : step.title}
+                </span>
+              </div>
             </button>
           ))}
         </div>
 
         {/* Interactive Step Display */}
-        <div className="process-stage-card">
-          <div className="process-card-image-box">
+        <div className="process-showcase-card">
+          <div className="process-visual-side">
             <img
               src={current.image}
               alt={current.title}
+              className="process-main-img"
               loading="lazy"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=800&q=80";
               }}
             />
-            <div className="process-pill-badge">
-              {lang === 'uz' ? current.detailPill_uz : current.detailPill}
+            <div className="process-image-badge">
+              <span className="badge-glow" />
+              <span>{lang === 'uz' ? current.detailPill_uz : current.detailPill}</span>
             </div>
           </div>
 
-          <div className="process-card-info">
-            <div className="process-phase-badge">
-              Phase {current.step} • {lang === 'uz' ? current.phase_uz : current.phase}
+          <div className="process-info-side">
+            <div className="process-info-step-label">
+              <span>Phase {current.step}</span>
+              <span>•</span>
+              <span className="process-phase-highlight">{lang === 'uz' ? current.phase_uz : current.phase}</span>
             </div>
-            <h3 className="process-card-title">
+            <h3 className="process-active-title">
               {lang === 'uz' ? current.title_uz : current.title}
             </h3>
-            <p className="process-card-summary">
+            <p className="process-active-summary">
               {lang === 'uz' ? current.summary_uz : current.summary}
             </p>
 
             <div className="process-meta-list">
               {(lang === 'uz' ? current.meta_uz : current.meta).map((item, mIdx) => (
                 <span key={mIdx} className="process-meta-item">
-                  ✓ {item}
+                  <CheckCircleIcon size={16} color="var(--teal)" />
+                  <span>{item}</span>
                 </span>
               ))}
             </div>
 
-            <div className="process-nav-buttons">
+            <div className="process-nav-controls">
               <button
-                className="process-nav-prev"
+                className="process-nav-btn"
                 onClick={() => setActiveStep((prev) => (prev > 0 ? prev - 1 : processSteps.length - 1))}
               >
                 ← {lang === 'uz' ? 'Oldingi' : 'Previous'}
               </button>
               <button
-                className="process-nav-next"
+                className="process-nav-btn primary"
                 onClick={() => setActiveStep((prev) => (prev < processSteps.length - 1 ? prev + 1 : 0))}
               >
                 {lang === 'uz' ? 'Keyingi Bosqich' : 'Next Stage'} →
