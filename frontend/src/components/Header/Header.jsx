@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 import './Header.css';
 
-export default function Header({ cartCount, onOpenCart, onOpenMemberCard }) {
+export default function Header({
+  cartCount = 0,
+  wishlistCount = 0,
+  onOpenCart,
+  onOpenWishlist,
+  onOpenMemberCard,
+  onOpenProfile,
+  onOpenAdmin,
+}) {
+  const { t, lang, setLang } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -38,12 +48,14 @@ export default function Header({ cartCount, onOpenCart, onOpenMemberCard }) {
     }
   };
 
+  const toggleLanguage = () => {
+    setLang(lang === 'en' ? 'uz' : 'en');
+  };
+
   return (
     <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="announcement-bar">
-        <span>Complimentary global courier on bespoke orders over $150</span>
-        <span>•</span>
-        <span>Handcrafted Botanical Ceramic Ware</span>
+        <span>{t('announcement')}</span>
       </div>
 
       <div className="header-main">
@@ -57,16 +69,124 @@ export default function Header({ cartCount, onOpenCart, onOpenMemberCard }) {
         </a>
 
         <ul className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
-          <li className="nav-item"><a href="#collection" onClick={(e) => handleNavClick(e, 'collection')}>Collection</a></li>
-          <li className="nav-item"><a href="#pillars" onClick={(e) => handleNavClick(e, 'pillars')}>Standards</a></li>
-          <li className="nav-item"><a href="#craft-process" onClick={(e) => handleNavClick(e, 'craft-process')}>The Craft</a></li>
-          <li className="nav-item"><a href="#lookbook" onClick={(e) => handleNavClick(e, 'lookbook')}>Living Spaces</a></li>
-          <li className="nav-item"><a href="#collector-reviews" onClick={(e) => handleNavClick(e, 'collector-reviews')}>Reviews</a></li>
-          <li className="nav-item"><a href="#faq" onClick={(e) => handleNavClick(e, 'faq')}>FAQ</a></li>
-          <li className="nav-item"><a href="#member-portal" onClick={(e) => handleNavClick(e, 'member-portal')}>Guild</a></li>
+          <li className="nav-item">
+            <a href="#collection" onClick={(e) => handleNavClick(e, 'collection')}>
+              {t('nav_collection')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#pillars" onClick={(e) => handleNavClick(e, 'pillars')}>
+              {t('nav_standards')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#craft-process" onClick={(e) => handleNavClick(e, 'craft-process')}>
+              {t('nav_craft')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#lookbook" onClick={(e) => handleNavClick(e, 'lookbook')}>
+              {t('nav_spaces')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#collector-reviews" onClick={(e) => handleNavClick(e, 'collector-reviews')}>
+              {t('nav_reviews')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#faq" onClick={(e) => handleNavClick(e, 'faq')}>
+              {t('nav_faq')}
+            </a>
+          </li>
+          <li className="nav-item">
+            <a href="#member-portal" onClick={(e) => handleNavClick(e, 'member-portal')}>
+              {t('nav_guild')}
+            </a>
+          </li>
         </ul>
 
         <div className="header-actions">
+          {/* 6. Language Switcher (EN | UZ) */}
+          <button
+            className="lang-switcher-pill"
+            onClick={toggleLanguage}
+            title={lang === 'en' ? "O'zbek tiliga o'tish" : "Switch to English"}
+            aria-label="Toggle language"
+          >
+            <span className={`lang-choice ${lang === 'en' ? 'active' : ''}`}>EN</span>
+            <span className="lang-sep">/</span>
+            <span className={`lang-choice ${lang === 'uz' ? 'active' : ''}`}>UZ</span>
+          </button>
+
+          {/* 4. Wishlist Button with Badge */}
+          <button
+            className="action-icon-btn"
+            onClick={onOpenWishlist}
+            title={t('nav_wishlist')}
+            aria-label="Open Wishlist"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill={wishlistCount > 0 ? '#C46D4B' : 'none'} stroke={wishlistCount > 0 ? '#C46D4B' : 'currentColor'} strokeWidth="1.8">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+            {wishlistCount > 0 && <span className="action-badge-dot">{wishlistCount}</span>}
+          </button>
+
+          {/* 2. User Profile & Settings Button */}
+          <button
+            className="action-icon-btn profile-trigger-btn"
+            onClick={onOpenProfile}
+            title={t('nav_profile')}
+            aria-label="Open Profile and Settings"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </button>
+
+          {/* 3. Studio Admin Trigger Button */}
+          <button
+            className="action-icon-btn admin-trigger-btn"
+            onClick={onOpenAdmin}
+            title={t('nav_admin')}
+            aria-label="Open Studio Admin Dashboard"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+            </svg>
+          </button>
+
+          {/* Member Card Button */}
+          <button
+            className="action-btn member-card-btn"
+            onClick={onOpenMemberCard}
+            title={t('nav_member_card')}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            <span className="btn-label-text">{t('nav_member_card')}</span>
+          </button>
+
+          {/* Cart Button */}
+          <button
+            className="action-btn cart-btn"
+            onClick={onOpenCart}
+            title={t('nav_cart')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span className="btn-label-text">{t('nav_cart')}</span>
+            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </button>
+
+          {/* Mobile Menu Toggle */}
           <button
             className="mobile-menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -84,31 +204,6 @@ export default function Header({ cartCount, onOpenCart, onOpenMemberCard }) {
                 <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
             )}
-          </button>
-          <button
-            className="action-btn"
-            onClick={onOpenMemberCard}
-            title="Open Virtual Member Card"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <rect x="2" y="5" width="20" height="14" rx="2" />
-              <line x1="2" y1="10" x2="22" y2="10" />
-            </svg>
-            <span>Member Card</span>
-          </button>
-
-          <button
-            className="action-btn"
-            onClick={onOpenCart}
-            title="View Cart"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <path d="M16 10a4 4 0 0 1-8 0" />
-            </svg>
-            <span>Cart</span>
-            {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
           </button>
         </div>
       </div>

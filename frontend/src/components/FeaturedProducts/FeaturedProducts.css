@@ -401,3 +401,35 @@
     width: 100%;
   }
 }
+
+/* Wishlist Toggle Button on Card */
+.product-wishlist-toggle-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(23, 90, 103, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 4;
+}
+
+.product-wishlist-toggle-btn:hover {
+  background: #FFF;
+  transform: scale(1.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.product-wishlist-toggle-btn.wished {
+  background: #FFF;
+  color: #C46D4B;
+  box-shadow: 0 4px 14px rgba(196, 109, 75, 0.2);
+}

@@ -1,29 +1,50 @@
 import React from 'react';
-import { storyStats } from '../../data/products.js';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 import './StorySection.css';
 
+const storyStatsData = [
+  { value: '1,320°C', label: 'Kiln Firing Temperature', label_uz: 'Xumdon Olov Harorati', sub: 'Wood-fired reduction', sub_uz: 'O\'tinda toblangan' },
+  { value: '180+', label: 'Days Clay Aging', label_uz: 'Kun Gil Yetiltirilishi', sub: 'In stone vaults', sub_uz: 'Tosh xonalarida' },
+  { value: '100%', label: 'Food Safe & Vitrified', label_uz: 'Xavfsiz va Pishiq', sub: 'Zero toxic additives', sub_uz: 'Zararsiz tabiiy sir' },
+  { value: '42', label: 'Nations Reached', label_uz: 'Davlatga Yetkazilgan', sub: 'White-glove courier', sub_uz: 'Ishonchli kuryer' },
+];
+
 export default function StorySection() {
+  const { lang } = useLanguage();
+
   return (
     <section id="craft-story" className="story-section">
       <div className="story-container">
         <div className="story-body">
-          <div className="story-eyebrow">Our Roots & Heritage</div>
-          <h2 className="story-heading">Patience in Clay, Timelessness in Spirit</h2>
+          <div className="story-eyebrow">
+            {lang === 'uz' ? 'Ildizlarimiz va Merosimiz' : 'Our Roots & Heritage'}
+          </div>
+          <h2 className="story-heading">
+            {lang === 'uz' ? 'Gildagi Sabr, Ruhdagi Abadiylik' : 'Patience in Clay, Timelessness in Spirit'}
+          </h2>
           
           <p className="story-text">
-            Every Heritage Grove piece begins as raw riverbank stoneware clay, aged for six months in shaded stone chambers. Our master potters turn each silhouette on foot-powered wheels, honoring centuries-old Asian and Mediterranean ceramic traditions.
+            {lang === 'uz'
+              ? 'Heritage Grove ning har bir asari daryo bo\'yidagi xom toshsimon gildan boshlanadi va olti oy davomida salqin tosh xonalarda yetiltiriladi. Bosh ustalarimiz har bir shaklni oyoq charxida qo\'lda yaratib, ko\'p asrlik an\'analarni sharaflaydilar.'
+              : 'Every Heritage Grove piece begins as raw riverbank stoneware clay, aged for six months in shaded stone chambers. Our master potters turn each silhouette on foot-powered wheels, honoring centuries-old Asian and Mediterranean ceramic traditions.'}
           </p>
 
           <p className="story-text">
-            We fire exclusively with dried fallen orchard pine in traditional multi-chamber climbing kilns. The fly-ash fuses naturally onto the porcelain slip, producing organic variations that can never be replicated by industrial factories.
+            {lang === 'uz'
+              ? 'Biz xumdonlarimizni faqat quruq qarag\'ay o\'tinlari bilan qiziymiz. Olov uchqunlari va kul sirtda tabiiy erib, hech qanday zavod takrorlay olmaydigan tirik naqshlarni hosil qiladi.'
+              : 'We fire exclusively with dried fallen orchard pine in traditional multi-chamber climbing kilns. The fly-ash fuses naturally onto the porcelain slip, producing organic variations that can never be replicated by industrial factories.'}
           </p>
 
           <div className="stats-grid">
-            {storyStats.map((stat, i) => (
+            {storyStatsData.map((stat, i) => (
               <div key={i} className="stat-item" style={{ animationDelay: `${0.2 + i * 0.12}s` }}>
                 <span className="stat-value">{stat.value}</span>
-                <span className="stat-label">{stat.label}</span>
-                <span className="stat-sub">{stat.sub}</span>
+                <span className="stat-label">
+                  {lang === 'uz' ? stat.label_uz : stat.label}
+                </span>
+                <span className="stat-sub">
+                  {lang === 'uz' ? stat.sub_uz : stat.sub}
+                </span>
               </div>
             ))}
           </div>
@@ -44,8 +65,14 @@ export default function StorySection() {
             }}
           />
           <div className="mosaic-badge">
-            <div className="mosaic-badge-title">Master Kiln Fire</div>
-            <div className="mosaic-badge-desc">1,320°C high-fire reduction for stone resonance and permanent water tightness.</div>
+            <div className="mosaic-badge-title">
+              {lang === 'uz' ? 'Usta Xumdon Olovi' : 'Master Kiln Fire'}
+            </div>
+            <div className="mosaic-badge-desc">
+              {lang === 'uz'
+                ? 'Toshdek mustahkamlik va suv o\'tkazmaslik uchun 1,320°C li yuqori haroratli toblash.'
+                : '1,320°C high-fire reduction for stone resonance and permanent water tightness.'}
+            </div>
           </div>
         </div>
       </div>

@@ -14,8 +14,11 @@ import FaqSection from './components/FaqSection/FaqSection.jsx';
 import FullNewsletterSection from './components/FullNewsletterSection/FullNewsletterSection.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import CartDrawer from './components/CartDrawer/CartDrawer.jsx';
+import WishlistDrawer from './components/WishlistDrawer/WishlistDrawer.jsx';
 import MemberModal from './components/MemberModal/MemberModal.jsx';
 import CheckoutModal from './components/CheckoutModal/CheckoutModal.jsx';
+import UserProfileModal from './components/UserProfileModal/UserProfileModal.jsx';
+import AdminDashboardModal from './components/AdminDashboardModal/AdminDashboardModal.jsx';
 import StudioConcierge from './components/StudioConcierge/StudioConcierge.jsx';
 import FloatingNav from './components/FloatingNav/FloatingNav.jsx';
 import Toast from './components/Toast/Toast.jsx';
@@ -23,9 +26,21 @@ import { useScrollReveal } from './hooks/useScrollReveal.js';
 
 export default function App() {
   const [cartItems, setCartItems] = useState([]);
+  const [wishlistItems, setWishlistItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('hg_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -50,6 +65,13 @@ export default function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Persist Wishlist to LocalStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('hg_wishlist', JSON.stringify(wishlistItems));
+    } catch (e) {}
+  }, [wishlistItems]);
 
   const addToast = (title, message, type = 'info') => {
     const id = Date.now() + Math.random();
@@ -81,6 +103,27 @@ export default function App() {
       'success'
     );
     setIsCartOpen(true);
+  };
+
+  const handleToggleWishlist = (product) => {
+    const exists = wishlistItems.some((w) => w.id === product.id);
+    if (exists) {
+      setWishlistItems((prev) => prev.filter((w) => w.id !== product.id));
+      addToast('Wishlist', `${product.name} removed from your wishlist.`, 'info');
+    } else {
+      setWishlistItems((prev) => [product, ...prev]);
+      addToast('Wishlist', `${product.name} added to your wishlist.`, 'success');
+    }
+  };
+
+  const handleRemoveFromWishlist = (id) => {
+    setWishlistItems((prev) => prev.filter((w) => w.id !== id));
+    addToast('Wishlist', 'Item removed from wishlist.', 'info');
+  };
+
+  const handleMoveToCart = (product) => {
+    handleAddToCart(product);
+    setWishlistItems((prev) => prev.filter((w) => w.id !== product.id));
   };
 
   const handleUpdateQty = (id, delta) => {
@@ -134,10 +177,15 @@ export default function App() {
       <GlobalStyles />
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
 
+      {/* Header with Navigation, Language Switcher, Wishlist, Profile & Cart */}
       <Header
         cartCount={totalCartCount}
+        wishlistCount={wishlistItems.length}
         onOpenCart={() => setIsCartOpen(true)}
+        onOpenWishlist={() => setIsWishlistOpen(true)}
         onOpenMemberCard={() => setIsMemberModalOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
+        onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
       <main>
@@ -149,9 +197,13 @@ export default function App() {
           <PressBar />
         </div>
 
-        {/* 3. The Seasonal Ceramic Collection */}
+        {/* 3. The Seasonal Ceramic Collection with Wishlist Hearts */}
         <div className="reveal-on-scroll">
-          <FeaturedProducts onAddToCart={handleAddToCart} />
+          <FeaturedProducts
+            onAddToCart={handleAddToCart}
+            wishlistItems={wishlistItems}
+            onToggleWishlist={handleToggleWishlist}
+          />
         </div>
 
         {/* 4. The 4 Artisanal Standards / USP Grid */}
@@ -174,7 +226,7 @@ export default function App() {
           <Lookbook onExploreCollection={scrollToCollection} />
         </div>
 
-        {/* 8. Collector Testimonials & Verified Reviews */}
+        {/* 8. Collector Testimonials & Infinite Auto-Marquee */}
         <div className="reveal-on-scroll reveal-delay-1">
           <Testimonials />
         </div>
@@ -208,6 +260,15 @@ export default function App() {
         onOpenCheckout={handleOpenCheckout}
       />
 
+      <WishlistDrawer
+        isOpen={isWishlistOpen}
+        onClose={() => setIsWishlistOpen(false)}
+        wishlistItems={wishlistItems}
+        onRemoveFromWishlist={handleRemoveFromWishlist}
+        onMoveToCart={handleMoveToCart}
+        onExploreCollection={scrollToCollection}
+      />
+
       <MemberModal
         isOpen={isMemberModalOpen}
         onClose={() => setIsMemberModalOpen(false)}
@@ -219,6 +280,19 @@ export default function App() {
         items={cartItems}
         total={totalCartAmount}
         onOrderSuccess={handleOrderSuccess}
+        onOpenProfile={() => setIsProfileOpen(true)}
+      />
+
+      <UserProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        onToast={addToast}
+      />
+
+      <AdminDashboardModal
+        isOpen={isAdminOpen}
+        onClose={() => setIsAdminOpen(false)}
+        onToast={addToast}
       />
 
       <StudioConcierge

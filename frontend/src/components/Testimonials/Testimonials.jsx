@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../../context/LanguageContext.jsx';
 import './Testimonials.css';
 
 const collectorReviews = [
@@ -13,6 +14,7 @@ const collectorReviews = [
     date: 'March 2026',
     verified: true,
     text: 'We commissioned three monolithic vessels for a minimalist waterfront villa. The depth of the wood-fired reduction glaze is hypnotic; guests consistently pause and touch the surface. In a world of synthetic mass production, Heritage Grove is pure soul.',
+    text_uz: 'Sohil bo\'yidagi minimalist villa uchun uchta maxsus vaza buyurtma qildik. Xumdon sirlarining chuqurligi sehrli darajada; mehmonlar doim to\'xtab, yuzasini ushlab ko\'rishadi. Ommaviy ishlab chiqarish davrida Heritage Grove chinakam san\'atdir.',
   },
   {
     id: 2,
@@ -25,6 +27,7 @@ const collectorReviews = [
     date: 'February 2026',
     verified: true,
     text: 'In kaiseki dining, the ceramic vessel is equal partner to the seasonal ingredient. Heritage Grove bowls elevate delicate broths with their thermal retention and unglazed tactile foot. Masterful craftsmanship.',
+    text_uz: 'Kayseki taomlarida sopol idish fasliy masalliqlar kabi muhim o\'rin tutadi. Heritage Grove idishlari issiqlikni ajoyib saqlab, nozik ta\'mlarni yuksaltiradi. Yuksak mahorat.',
   },
   {
     id: 3,
@@ -37,6 +40,7 @@ const collectorReviews = [
     date: 'January 2026',
     verified: true,
     text: 'The unboxing experience alone reflects consummate care. Encased in molded botanical fiber with a numbered kiln certificate. The crackle celadon glaze has subtle blue-green fissures that catch morning light like quiet water.',
+    text_uz: 'Qadoqni ochish jarayonining o\'ziyoq yuksak ehtiromdan darak beradi. Raqamlangan sertifikat va xavfsiz quti. Ko\'kimtir seladon siri tonggi nurlarda tinch oqayotgan suvdek tovlanadi.',
   },
   {
     id: 4,
@@ -49,6 +53,7 @@ const collectorReviews = [
     date: 'April 2026',
     verified: true,
     text: 'Flawless balance. The pitcher pours without a single drop lost, and the handle ergonomics fit naturally in hands of any size. It has become the centerpiece of our studio conference table.',
+    text_uz: 'Mukammal muvozanat. Ko\'zadan bir tomchi ham to\'kilmasdan quyiladi, tutqichi esa har qanday qo\'lga nihoyatda qulay o\'tiradi. U studiyamiz stolining eng ko\'rkam bezagiga aylandi.',
   },
   {
     id: 5,
@@ -58,68 +63,60 @@ const collectorReviews = [
     category: 'Private Collectors',
     acquired: 'Iron-Speckled Gaiwan & Cups',
     rating: 5,
-    date: 'March 2026',
+    date: 'May 2026',
     verified: true,
-    text: 'A gaiwan must feel like an extension of one’s fingertips during a 100°C pour. The heat dissipation of their wild riverbank clay is extraordinary. No burns, perfect aromatic release.',
-  },
-  {
-    id: 6,
-    name: 'Sybilla Fontaine',
-    role: 'Sommelier & Hospitality Consultant',
-    location: 'Paris, France',
-    category: 'Culinary Masters',
-    acquired: 'Earth & Embers Decanting Carafe',
-    rating: 5,
-    date: 'December 2025',
-    verified: true,
-    text: 'Natural stoneware imparts a pleasant micro-aeration to aged natural wines. Not to mention the sheer visual poetry it brings to a candlelight dinner table.',
+    text: 'The porous stoneware breathes with each infusion. The lid fit is buttery smooth, and the clay retains the roasted floral fragrance of high-mountain wulong teas exquisitely.',
+    text_uz: 'G\'ovakli sopol har bir damlamada choy bilan nafas oladi. Qopqog\'i juda silliq yopiladi va tog\' ulun choylarining xushbo\'y hidini uzoq saqlab turadi.',
   },
 ];
 
 export default function Testimonials() {
+  const { t, lang } = useLanguage();
   const [activeTab, setActiveTab] = useState('All');
   const [isPaused, setIsPaused] = useState(false);
 
-  const filterTabs = ['All', 'Architects', 'Culinary Masters', 'Private Collectors'];
+  const tabs = ['All', 'Architects', 'Culinary Masters', 'Private Collectors'];
 
   const filteredReviews = collectorReviews.filter(
-    (r) => activeTab === 'All' || r.category === activeTab
+    (rev) => activeTab === 'All' || rev.category === activeTab
   );
 
-  // Repeat reviews twice to create a seamless infinite loop
-  const marqueeItems = [...filteredReviews, ...filteredReviews];
+  const marqueeItems = [...filteredReviews, ...filteredReviews, ...filteredReviews];
 
   return (
     <section id="collector-reviews" className="testimonials-section">
       <div className="testimonials-container">
-        {/* Header */}
         <div className="testimonials-header">
-          <span className="testimonials-eyebrow">Verified Appraisals</span>
-          <h2 className="testimonials-title">
-            Words from our <em>Patrons &amp; Stewards</em>
-          </h2>
-          <p className="testimonials-subtitle">
-            Across 42 nations, architects, Michelin chefs, and quiet connoisseurs live with Heritage Grove ceramics every day.
-          </p>
+          <div>
+            <span className="testimonials-eyebrow">{t('reviews_eyebrow')}</span>
+            <h2 className="testimonials-title">
+              {t('reviews_title_1')} <em>{t('reviews_title_italic')}</em>
+            </h2>
+          </div>
 
-          {/* Aggregate Rating Banner */}
-          <div className="rating-summary-banner">
-            <div className="rating-summary-stars">★★★★★</div>
-            <div className="rating-summary-score">4.96 / 5.0</div>
-            <div className="rating-summary-count">Based on 850+ Verified Kiln Deliveries Worldwide</div>
+          <div className="score-summary-card">
+            <div className="score-number-row">
+              <span className="big-rating">4.96</span>
+              <span className="stars-glow">★★★★★</span>
+            </div>
+            <p className="score-subtitle">{t('reviews_score_banner')}</p>
           </div>
         </div>
 
-        {/* Filter Pills & Marquee Control */}
-        <div className="testimonials-controls-row">
-          <div className="testimonials-filter-bar">
-            {filterTabs.map((tab) => (
+        <p className="testimonials-lead-desc">
+          {t('reviews_subtitle')}
+        </p>
+
+        {/* Categories Bar & Controls */}
+        <div className="testimonials-control-bar">
+          <div className="testimonials-filter-tabs">
+            {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`testimonial-pill ${activeTab === tab ? 'active' : ''}`}
+                className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
                 onClick={() => setActiveTab(tab)}
               >
-                {tab}
+                {tab === 'All' ? (lang === 'uz' ? 'Barchasi' : 'All') : tab}
               </button>
             ))}
           </div>
@@ -134,7 +131,7 @@ export default function Testimonials() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <polygon points="5 3 19 12 5 21 5 3" />
                 </svg>
-                <span>Play Scroll</span>
+                <span>{lang === 'uz' ? 'Harakatlantirish' : 'Play Scroll'}</span>
               </>
             ) : (
               <>
@@ -142,7 +139,7 @@ export default function Testimonials() {
                   <rect x="6" y="4" width="4" height="16" />
                   <rect x="14" y="4" width="4" height="16" />
                 </svg>
-                <span>Hover or Click to Pause</span>
+                <span>{lang === 'uz' ? 'To\'xtatish' : 'Hover or Click to Pause'}</span>
               </>
             )}
           </button>
@@ -163,14 +160,16 @@ export default function Testimonials() {
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  <span>Verified Kiln Patron</span>
+                  <span>{lang === 'uz' ? 'Tasdiqlangan Xaridor' : 'Verified Kiln Patron'}</span>
                 </div>
               </div>
 
-              <p className="testimonial-quote-text">“{rev.text}”</p>
+              <p className="testimonial-quote-text">
+                “{lang === 'uz' ? (rev.text_uz || rev.text) : rev.text}”
+              </p>
 
               <div className="testimonial-acquired-box">
-                <span className="acquired-label">Acquired:</span>
+                <span className="acquired-label">{lang === 'uz' ? 'Xarid Qilingan:' : 'Acquired:'}</span>
                 <span className="acquired-name">{rev.acquired}</span>
               </div>
 

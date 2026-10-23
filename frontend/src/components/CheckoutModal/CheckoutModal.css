@@ -1,43 +1,64 @@
 .checkout-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(18, 48, 56, 0.6);
+  background: rgba(18, 48, 56, 0.65);
   backdrop-filter: blur(8px);
-  z-index: 1100;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  animation: checkout-fade 0.25s ease;
+  animation: checkout-fade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .checkout-modal {
   background: #FAF7F4;
   border-radius: 24px;
   width: 100%;
-  max-width: 580px;
+  max-width: 620px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(23, 90, 103, 0.16);
-  padding: clamp(1.75rem, 4vw, 2.5rem);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(23, 90, 103, 0.18);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(23, 90, 103, 0.2) transparent;
+}
+
+.checkout-modal::-webkit-scrollbar {
+  width: 6px;
+}
+.checkout-modal::-webkit-scrollbar-thumb {
+  background: rgba(23, 90, 103, 0.2);
+  border-radius: 3px;
 }
 
 .checkout-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: transparent;
+  top: 18px;
+  right: 18px;
+  background: rgba(23, 90, 103, 0.06);
   border: none;
-  font-size: 1.4rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ink);
   cursor: pointer;
-  line-height: 1;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.checkout-close:hover {
+  background: rgba(23, 90, 103, 0.14);
+  transform: scale(1.05);
 }
 
 .checkout-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .checkout-eyebrow {
@@ -46,7 +67,7 @@
   letter-spacing: 0.12em;
   color: #C46D4B;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 .checkout-title {
@@ -55,14 +76,15 @@
   font-weight: 600;
   color: var(--ink);
   margin: 0;
+  line-height: 1.15;
 }
 
 .checkout-summary-box {
   background: #FFF;
   border: 1px solid rgba(23, 90, 103, 0.1);
   border-radius: 14px;
-  padding: 1.1rem 1.25rem;
-  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,10 +102,19 @@
   color: var(--ink);
 }
 
+.checkout-error-badge {
+  background: #FCE8E6;
+  color: #C5221F;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  margin-bottom: 1rem;
+}
+
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1rem;
 }
 
 .input-label {
@@ -100,13 +131,13 @@
   width: 100%;
   background: #FFF;
   border: 1px solid rgba(23, 90, 103, 0.22);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.95rem;
   border-radius: 10px;
   font-size: 0.9rem;
   color: var(--ink);
   font-family: inherit;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
 }
 
 .input-field:focus {
@@ -118,65 +149,257 @@
 .checkout-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.85rem;
 }
 
-.payment-select-group {
+@media (max-width: 520px) {
+  .checkout-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* PAYMENT SELECTOR & PREVIEW */
+.payment-section-box {
+  background: rgba(23, 90, 103, 0.03);
+  border: 1px solid rgba(23, 90, 103, 0.12);
+  border-radius: 14px;
+  padding: 1.15rem;
+}
+
+.payment-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+
+.test-mode-badge {
+  background: #FEF3D6;
+  color: #B45309;
+  border: 1px solid rgba(180, 83, 9, 0.2);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.payment-tabs-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  margin-top: 0.25rem;
+  margin-bottom: 1rem;
 }
 
-.payment-option {
-  border: 1.5px solid rgba(23, 90, 103, 0.2);
-  border-radius: 12px;
-  padding: 0.85rem 1rem;
-  cursor: pointer;
+@media (max-width: 560px) {
+  .payment-tabs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.payment-tab-card {
   background: #FFF;
+  border: 1.5px solid rgba(23, 90, 103, 0.12);
+  border-radius: 12px;
+  padding: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  transition: all 0.2s ease;
 }
 
-.payment-option.active {
+.payment-tab-card:hover {
+  border-color: rgba(23, 90, 103, 0.35);
+  transform: translateY(-1px);
+}
+
+.payment-tab-card.active {
   border-color: var(--ink);
-  background: rgba(23, 90, 103, 0.05);
+  background: #F4F7F7;
+  box-shadow: 0 4px 12px rgba(23, 90, 103, 0.08);
 }
 
-.payment-opt-title {
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: var(--ink);
+.payment-tab-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.payment-opt-sub {
-  font-size: 0.74rem;
+.payment-tab-desc {
+  font-size: 0.76rem;
   color: var(--ink-soft);
+  line-height: 1.35;
 }
 
+/* Payme & Click Pills */
+.payme-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #00CCCC;
+  color: #003333;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+}
+.payme-dot {
+  width: 6px;
+  height: 6px;
+  background: #FFF;
+  border-radius: 50%;
+}
+
+.click-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #0070BA;
+  color: #FFF;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+}
+.click-dot {
+  width: 6px;
+  height: 6px;
+  background: #00E676;
+  border-radius: 50%;
+}
+
+.card-pill, .cash-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* Payment Visual Panels */
+.payment-visual-box {
+  background: #FFF;
+  border-radius: 12px;
+  border: 1px dashed rgba(23, 90, 103, 0.2);
+  padding: 1rem;
+}
+
+.visual-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: #854D0E;
+  background: #FEF9C3;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
+}
+
+.simulation-hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Realistic Credit Card */
+.visual-credit-card {
+  background: linear-gradient(135deg, #175A67 0%, #0F3B43 100%);
+  color: #FFF;
+  border-radius: 12px;
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 20px rgba(15, 59, 67, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.visual-credit-card::after {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.card-chip {
+  width: 32px;
+  height: 24px;
+  background: #F2C94C;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-number-display {
+  font-family: 'Courier New', monospace;
+  font-size: 1.15rem;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+}
+
+.card-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card-micro-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  display: block;
+}
+
+.card-holder-name, .card-expiry-val {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.card-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card-sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* Place Order Button */
 .place-order-btn {
   background: var(--ink);
-  color: #FAF7F4;
+  color: #FFF;
   border: none;
+  border-radius: 12px;
   padding: 0.95rem 1.5rem;
-  border-radius: 999px;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.03em;
   cursor: pointer;
-  margin-top: 0.75rem;
-  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
 }
 
-.place-order-btn:hover:not(:disabled) {
-  background: #0E3E47;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(18, 48, 56, 0.2);
+.place-order-btn:hover {
+  background: #11424C;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(23, 90, 103, 0.25);
 }
 
 .place-order-btn:disabled {
@@ -184,43 +407,234 @@
   cursor: not-allowed;
 }
 
-/* Success State */
+/* AUTOMATED DIGITAL RECEIPT & CERTIFICATE */
 .order-success-card {
-  text-align: center;
-  padding: 1rem 0;
+  background: #FFF;
+  border-radius: 18px;
+  padding: 1.5rem;
+  border: 1px solid rgba(23, 90, 103, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
-.success-icon-wrap {
-  width: 64px;
-  height: 64px;
+.receipt-brand-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(23, 90, 103, 0.1);
+  margin-bottom: 1rem;
+}
+
+.receipt-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.receipt-seal {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #FFF;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.receipt-brand-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: var(--ink);
+}
+
+.receipt-brand-sub {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+}
+
+.receipt-status-pill {
   background: #E6F4EA;
   color: #137333;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
 }
 
 .order-number-badge {
   display: inline-block;
-  background: #EAE3DE;
+  background: rgba(23, 90, 103, 0.08);
   color: var(--ink);
-  font-family: monospace;
-  font-size: 0.95rem;
-  font-weight: 700;
   padding: 0.35rem 0.85rem;
   border-radius: 6px;
-  margin-bottom: 1rem;
-  letter-spacing: 0.08em;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+
+.receipt-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  background: #FAF7F4;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.25rem;
+}
+
+.receipt-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.receipt-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.receipt-val {
+  font-size: 0.85rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.payment-tag-badge {
+  color: #175A67;
+}
+
+.receipt-items-list {
+  border-top: 1px dashed rgba(23, 90, 103, 0.2);
+  border-bottom: 1px dashed rgba(23, 90, 103, 0.2);
+  padding: 0.85rem 0;
+  margin-bottom: 1.25rem;
+}
+
+.receipt-items-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.receipt-item-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.86rem;
+  color: var(--ink);
+  padding: 0.4rem 0;
+}
+
+.receipt-item-desc {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.receipt-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.receipt-item-qty {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+}
+
+.receipt-item-price {
+  font-weight: 600;
+}
+
+.receipt-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(23, 90, 103, 0.1);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.receipt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.receipt-btn-print {
+  background: #FFF;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.receipt-btn-print:hover {
+  background: rgba(23, 90, 103, 0.06);
+}
+
+.receipt-btn-secondary {
+  background: rgba(23, 90, 103, 0.08);
+  border: none;
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-receipt-area, .print-receipt-area * {
+    visibility: visible;
+  }
+  .print-receipt-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+  }
+  .no-print {
+    display: none !important;
+  }
 }
 
 @keyframes checkout-fade {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
-}
-
-@media (max-width: 600px) {
-  .checkout-row, .payment-select-group {
-    grid-template-columns: 1fr;
-  }
 }
