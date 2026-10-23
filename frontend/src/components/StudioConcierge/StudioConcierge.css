@@ -1,0 +1,184 @@
+.concierge-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 41, 48, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: scFadeIn 0.22s ease-out;
+}
+
+@keyframes scFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.concierge-modal-box {
+  background: #FFFFFF;
+  border-radius: 20px;
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 3rem 2.8rem;
+  position: relative;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(23, 90, 103, 0.15);
+}
+
+.concierge-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 90, 103, 0.15);
+  background: var(--sand);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.concierge-close-btn:hover {
+  background: #FFFFFF;
+  color: var(--teal);
+}
+
+.concierge-modal-header {
+  margin-bottom: 2rem;
+}
+
+.concierge-eyebrow {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 0.4rem;
+}
+
+.concierge-modal-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+.concierge-modal-subtitle {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.concierge-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.concierge-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.concierge-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.concierge-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.concierge-field input,
+.concierge-field select,
+.concierge-field textarea {
+  border: 1px solid rgba(23, 90, 103, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  background: #FAF8F5;
+  color: var(--ink);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.concierge-field input:focus,
+.concierge-field select:focus,
+.concierge-field textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(23, 90, 103, 0.12);
+  background: #FFFFFF;
+}
+
+.concierge-footnote {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  margin-top: 0.25rem;
+}
+
+.concierge-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.concierge-cancel-btn {
+  background: transparent;
+  border: 1px solid rgba(23, 90, 103, 0.2);
+  color: var(--ink);
+  padding: 0.75rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.concierge-submit-btn {
+  background: var(--teal);
+  color: #FAF8F5;
+  border: none;
+  padding: 0.75rem 1.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.concierge-submit-btn:hover:not(:disabled) {
+  background: #11434c;
+}
+
+@media (max-width: 640px) {
+  .concierge-modal-box {
+    padding: 2rem 1.5rem;
+  }
+  .concierge-form-row {
+    grid-template-columns: 1fr;
+  }
+  .concierge-modal-title {
+    font-size: 1.8rem;
+  }
+}

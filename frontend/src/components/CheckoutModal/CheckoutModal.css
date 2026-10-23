@@ -1,0 +1,226 @@
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 48, 56, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: checkout-fade 0.25s ease;
+}
+
+.checkout-modal {
+  background: #FAF7F4;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(23, 90, 103, 0.16);
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  position: relative;
+}
+
+.checkout-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.checkout-header {
+  margin-bottom: 1.5rem;
+}
+
+.checkout-eyebrow {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #C46D4B;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.checkout-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.checkout-summary-box {
+  background: #FFF;
+  border: 1px solid rgba(23, 90, 103, 0.1);
+  border-radius: 14px;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-items-count {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.summary-total {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.input-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.input-field {
+  width: 100%;
+  background: #FFF;
+  border: 1px solid rgba(23, 90, 103, 0.22);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: var(--ink);
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px rgba(23, 90, 103, 0.15);
+}
+
+.checkout-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.payment-select-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.payment-option {
+  border: 1.5px solid rgba(23, 90, 103, 0.2);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  background: #FFF;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.payment-option.active {
+  border-color: var(--ink);
+  background: rgba(23, 90, 103, 0.05);
+}
+
+.payment-opt-title {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.payment-opt-sub {
+  font-size: 0.74rem;
+  color: var(--ink-soft);
+}
+
+.place-order-btn {
+  background: var(--ink);
+  color: #FAF7F4;
+  border: none;
+  padding: 0.95rem 1.5rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.place-order-btn:hover:not(:disabled) {
+  background: #0E3E47;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(18, 48, 56, 0.2);
+}
+
+.place-order-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success State */
+.order-success-card {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.success-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background: #E6F4EA;
+  color: #137333;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 1.25rem;
+}
+
+.order-number-badge {
+  display: inline-block;
+  background: #EAE3DE;
+  color: var(--ink);
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  letter-spacing: 0.08em;
+}
+
+@keyframes checkout-fade {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+  .checkout-row, .payment-select-group {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,112 @@
+.floating-nav-dock {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 990;
+  animation: dockSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dockSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.floating-dock-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 90, 103, 0.15);
+  background: #FFFFFF;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(14, 41, 48, 0.12);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.floating-dock-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(14, 41, 48, 0.18);
+}
+
+.floating-dock-btn.concierge {
+  background: var(--teal);
+  color: #FAF8F5;
+  border-color: var(--teal);
+}
+
+.floating-dock-btn.concierge:hover {
+  background: #11434c;
+}
+
+.floating-dock-btn.cart {
+  background: #FAF8F5;
+  color: var(--teal);
+}
+
+.dock-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #D8B46F;
+  color: #0E2930;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+.floating-dock-btn.top {
+  background: #FFFFFF;
+  color: var(--ink);
+}
+
+.dock-tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  background: rgba(14, 41, 48, 0.92);
+  backdrop-filter: blur(6px);
+  color: #FAF8F5;
+  font-size: 0.74rem;
+  font-weight: 500;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: all 0.2s ease;
+}
+
+.floating-dock-btn:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 640px) {
+  .floating-nav-dock {
+    bottom: 1.25rem;
+    right: 1.25rem;
+  }
+  .floating-dock-btn {
+    width: 44px;
+    height: 44px;
+  }
+}

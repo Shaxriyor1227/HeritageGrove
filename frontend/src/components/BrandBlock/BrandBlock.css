@@ -1,0 +1,90 @@
+.brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 1vw, 1rem);
+  animation: rise-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.04s;
+}
+
+.brand-mark {
+  width: clamp(52px, 4.4vw, 74px);
+  height: auto;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(1.85rem, 2.5vw, 2.9rem);
+  line-height: 1;
+  margin: 0;
+  color: var(--ink);
+}
+
+.brand-blurb {
+  margin: clamp(1.15rem, 2.4vh, 1.9rem) 0 0;
+  max-width: 24ch;
+  line-height: 1.62;
+  font-size: var(--fs-nav);
+  color: var(--ink);
+  animation: rise-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.12s;
+}
+
+.contact-list {
+  list-style: none;
+  padding: 0;
+  margin: clamp(1.15rem, 2.4vh, 1.9rem) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.6rem, 1.2vh, 0.95rem);
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: var(--fs-nav);
+  color: var(--ink);
+  animation: rise-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.contact-list li:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.contact-list li:nth-child(2) {
+  animation-delay: 0.28s;
+}
+
+.contact-list li:nth-child(3) {
+  animation-delay: 0.36s;
+}
+
+.contact-list svg {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.contact-list a {
+  text-decoration: none;
+}
+
+.contact-list a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-lockup,
+  .brand-blurb,
+  .contact-list li {
+    animation: none;
+  }
+}

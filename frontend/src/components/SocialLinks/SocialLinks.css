@@ -1,0 +1,51 @@
+.socials {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(0.9rem, 1.5vw, 1.5rem);
+  align-items: center;
+}
+
+.socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  animation: rise-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.socials a:hover {
+  opacity: 0.65;
+  transform: translateY(-2px);
+}
+
+.socials a:nth-child(1) {
+  animation-delay: 0.64s;
+}
+
+.socials a:nth-child(2) {
+  animation-delay: 0.7s;
+}
+
+.socials a:nth-child(3) {
+  animation-delay: 0.76s;
+}
+
+.socials a:nth-child(4) {
+  animation-delay: 0.82s;
+}
+
+.socials svg {
+  width: 26px;
+  height: 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .socials a {
+    animation: none;
+  }
+
+  .socials a:hover {
+    transform: none;
+  }
+}

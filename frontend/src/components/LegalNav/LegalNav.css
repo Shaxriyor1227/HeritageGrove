@@ -1,0 +1,38 @@
+.legal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(1.15rem, 2.6vw, 3rem);
+  flex-wrap: wrap;
+}
+
+.legal a {
+  display: inline-block;
+  font-size: var(--fs-nav);
+  color: var(--ink);
+  text-decoration: none;
+  animation: rise-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.legal a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal a:nth-child(1) {
+  animation-delay: 0.7s;
+}
+
+.legal a:nth-child(2) {
+  animation-delay: 0.78s;
+}
+
+.legal a:nth-child(3) {
+  animation-delay: 0.86s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legal a {
+    animation: none;
+  }
+}
