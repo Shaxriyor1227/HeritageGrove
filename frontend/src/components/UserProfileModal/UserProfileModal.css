@@ -457,6 +457,86 @@ input:checked + .toggle-slider:before {
   transform: translateY(-1px);
 }
 
+.open-full-admin-btn {
+  margin-top: 0.85rem;
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #F59E0B;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+.open-full-admin-btn:hover {
+  background: #FDE68A;
+  transform: translateY(-1px);
+}
+
+.profile-email-sub {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin: 0 0 0.35rem;
+}
+
+.copy-voucher-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFF;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.copy-voucher-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+  display: block;
+  font-style: italic;
+}
+
+.select-field {
+  cursor: pointer;
+}
+
+.profile-footer-bar {
+  margin-top: 1.5rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid rgba(23, 90, 103, 0.1);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.profile-logout-btn {
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #DC2626;
+  border-radius: 8px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s;
+}
+
+.profile-logout-btn:hover {
+  background: #FEE2E2;
+}
+
 @keyframes profile-fade {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }

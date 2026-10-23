@@ -43,6 +43,7 @@ const userController = require("../controller/userController");
  *         description: Server error
  */
 router.post("/users", userController.createUser);
+router.post("/users/login", userController.loginUser);
 
 /**
  * @swagger

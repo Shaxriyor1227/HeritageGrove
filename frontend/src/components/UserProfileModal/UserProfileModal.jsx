@@ -2,33 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from '../icons/Icons.jsx';
 import { useLanguage } from '../../context/LanguageContext.jsx';
+import { useAuth } from '../../context/AuthContext.jsx';
 import './UserProfileModal.css';
 
-export default function UserProfileModal({ isOpen, onClose, onToast }) {
+export default function UserProfileModal({ isOpen, onClose, onToast, onOpenAdminPortal }) {
   const { t, lang, setLang } = useLanguage();
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'guild' | 'settings'
+  const { user, setUser, logout } = useAuth();
 
-  // Settings State persisted in localStorage
-  const [profile, setProfile] = useState(() => {
-    try {
-      const saved = localStorage.getItem('hg_user_profile');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return {
-      name: 'Master Anvar',
-      email: 'anvar.collector@heritage.uz',
-      phone: '+998 90 123 45 67',
-      address: 'Tashkent, Mirabad District, Afrosiyob Street, 14',
-      currency: 'USD',
-      notifEmail: true,
-      notifSms: true,
-      guildTier: 'Master Collector',
-      guildPoints: 480,
-    };
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders' | 'about' | 'settings'
+
+  // Profile fields state
+  const [formData, setFormData] = useState({
+    name: user?.name || 'Master Anvar',
+    email: user?.email || 'anvar.collector@heritage.uz',
+    phone: user?.phone || '+998 90 123 45 67',
+    address: user?.address || 'Tashkent, Mirabad District, Afrosiyob Street, 14',
+    currency: 'USD',
+    notifEmail: true,
+    notifSms: true,
   });
 
-  // Orders State (retrieved from localStorage or mock)
   const [orders, setOrders] = useState([]);
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        address: user.address || prev.address,
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     if (isOpen) {
@@ -37,11 +44,10 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
         if (stored.length > 0) {
           setOrders(stored);
         } else {
-          // Default historical bespoke order for demonstration
           setOrders([
             {
               id: 7420,
-              customer_name: profile.name,
+              customer_name: user?.name || 'Master Anvar',
               date: lang === 'uz' ? '21-Oktabr, 2026' : 'Oct 21, 2026',
               total_amount: 320,
               payment_method: 'payme',
@@ -67,15 +73,23 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
         setOrders([]);
       }
     }
-  }, [isOpen, lang, profile.name]);
+  }, [isOpen, lang, user]);
 
   if (!isOpen) return null;
 
   const handleSaveSettings = (e) => {
     e.preventDefault();
-    try {
-      localStorage.setItem('hg_user_profile', JSON.stringify(profile));
-    } catch (e) {}
+    if (user) {
+      const updatedUser = {
+        ...user,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+      };
+      setUser(updatedUser);
+      localStorage.setItem('hg_auth_user', JSON.stringify(updatedUser));
+    }
 
     if (onToast) {
       onToast(
@@ -86,6 +100,19 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
     }
   };
 
+  const handleCopyCode = () => {
+    navigator.clipboard?.writeText('HERITAGE15');
+    setCopiedCode(true);
+    if (onToast) {
+      onToast(
+        lang === 'uz' ? 'Vaucher Nusxalandi' : 'Voucher Copied',
+        'HERITAGE15 15% discount applied to clipboard.',
+        'success'
+      );
+    }
+    setTimeout(() => setCopiedCode(false), 3000);
+  };
+
   const modalContent = (
     <div className="profile-overlay" onClick={onClose}>
       <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
@@ -93,20 +120,36 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
           <CloseIcon size={16} />
         </button>
 
-        {/* Profile Header Card */}
+        {/* Profile Header */}
         <div className="profile-top-bar">
           <div className="profile-avatar-wrap">
             <span className="profile-avatar-seal">
-              {profile.name.charAt(0).toUpperCase()}
+              {(user?.name || formData.name).charAt(0).toUpperCase()}
             </span>
-            <div>
-              <h3 className="profile-patron-name">{profile.name}</h3>
+            <div className="profile-meta-text">
+              <h3 className="profile-patron-name">{user?.name || formData.name}</h3>
+              <p className="profile-email-sub">{user?.email || formData.email}</p>
               <div className="profile-patron-meta">
-                <span className="profile-tier-badge">{profile.guildTier}</span>
-                <span className="profile-points-pill">✨ {profile.guildPoints} pts</span>
+                <span className={`profile-tier-badge ${user?.role === 'admin' ? 'admin' : ''}`}>
+                  {user?.role === 'admin' ? '⚡ Studio Director' : '🏺 Master Collector'}
+                </span>
+                <span className="profile-points-pill">✨ {user?.guildPoints || 480} pts</span>
               </div>
             </div>
           </div>
+
+          {/* Admin Switch Portal Button if Admin */}
+          {user?.role === 'admin' && (
+            <button
+              className="open-full-admin-btn"
+              onClick={() => {
+                onClose();
+                if (onOpenAdminPortal) onOpenAdminPortal();
+              }}
+            >
+              ⚡ {lang === 'uz' ? 'To\'liq Admin Panelini Ochish' : 'Open Full Studio Portal'}
+            </button>
+          )}
         </div>
 
         {/* Tab Navigation */}
@@ -115,28 +158,28 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
             className={`profile-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
             onClick={() => setActiveTab('orders')}
           >
-            📦 <span>{t('tab_orders')}</span>
+            📦 <span>{lang === 'uz' ? 'Sotib Olinganlar' : 'Purchased Items'}</span>
           </button>
           <button
-            className={`profile-tab-btn ${activeTab === 'guild' ? 'active' : ''}`}
-            onClick={() => setActiveTab('guild')}
+            className={`profile-tab-btn ${activeTab === 'about' ? 'active' : ''}`}
+            onClick={() => setActiveTab('about')}
           >
-            🛡️ <span>{t('tab_guild')}</span>
+            🏺 <span>{lang === 'uz' ? 'Gildiya Haqida' : 'About & Guild'}</span>
           </button>
           <button
             className={`profile-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
             onClick={() => setActiveTab('settings')}
           >
-            ⚙️ <span>{t('tab_settings')}</span>
+            ⚙️ <span>{lang === 'uz' ? 'Sozlamalar' : 'Settings'}</span>
           </button>
         </div>
 
-        {/* Tab Content 1: Orders & Visual Tracking */}
+        {/* TAB 1: SOTIB OLINGAN NARSALAR (MY PURCHASES & TRACKING) */}
         {activeTab === 'orders' && (
           <div className="profile-tab-panel">
             {orders.length === 0 ? (
               <div className="profile-empty-orders">
-                <p>{lang === 'uz' ? 'Hali buyurtmalar mavjud emas.' : 'No orders recorded yet.'}</p>
+                <p>{lang === 'uz' ? 'Hozircha xarid qilingan buyumlar yo\'q.' : 'You have not acquired any vessels yet.'}</p>
               </div>
             ) : (
               <div className="orders-list">
@@ -175,12 +218,12 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
                       </div>
                     </div>
 
-                    {/* Order Items Preview */}
+                    {/* Vessels in this order */}
                     <div className="order-items-compact">
                       {order.items?.map((it, idx) => (
                         <div key={idx} className="order-item-compact-row">
-                          <span>{it.name} ×{it.quantity}</span>
-                          <span style={{ fontWeight: '600' }}>${it.price * it.quantity}</span>
+                          <span className="item-title-qty">{it.name} ×{it.quantity}</span>
+                          <span className="item-price-sum">${it.price * it.quantity}</span>
                         </div>
                       ))}
                     </div>
@@ -191,16 +234,27 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
           </div>
         )}
 
-        {/* Tab Content 2: Guild Privileges */}
-        {activeTab === 'guild' && (
+        {/* TAB 2: ABOUT & GUILD PRIVILEGES */}
+        {activeTab === 'about' && (
           <div className="profile-tab-panel">
             <div className="guild-perks-box">
               <div className="guild-gold-card">
-                <div className="guild-card-eyebrow">Heritage Kyoto Guild</div>
-                <h4 className="guild-card-title">Master Patron Privileges</h4>
+                <div className="guild-card-eyebrow">
+                  {lang === 'uz' ? 'Kyoto Xumdon Gildiyasi' : 'Heritage Kyoto Kiln Guild'}
+                </div>
+                <h4 className="guild-card-title">
+                  {lang === 'uz' ? 'Mijoz Shaxsiy Imtiyozlari' : 'Master Patron Privileges'}
+                </h4>
                 <div className="guild-voucher-wrap">
-                  <span className="voucher-code-label">Exclusive 15% Privilege Voucher</span>
-                  <div className="voucher-code-pill">HERITAGE15</div>
+                  <div>
+                    <span className="voucher-code-label">
+                      {lang === 'uz' ? 'Maxsus 15% Chegirma Vaucheri' : 'Exclusive 15% Collector Voucher'}
+                    </span>
+                    <div className="voucher-code-pill">HERITAGE15</div>
+                  </div>
+                  <button className="copy-voucher-btn" onClick={handleCopyCode}>
+                    {copiedCode ? '✓ Copied' : (lang === 'uz' ? 'Nusxalash' : 'Copy Code')}
+                  </button>
                 </div>
               </div>
 
@@ -208,22 +262,24 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
                 <div className="guild-perk-item">
                   <span className="perk-icon">🏺</span>
                   <div>
-                    <strong>Private Kiln firings</strong>
-                    <p>Access to reserve 1-of-1 wood-fired vessels before public catalogue release.</p>
+                    <strong>{lang === 'uz' ? 'Yagona Nusxadagi Xumdon Asarlari' : 'Private Kiln Drops Access'}</strong>
+                    <p>{lang === 'uz' ? 'Katalogga chiqmasdan oldin xumdondan chiqqan noyob vazalarni birinchilardan bo\'lib band qilish huquqi.' : 'Reserve 1-of-1 wood-fired works before public release.'}</p>
                   </div>
                 </div>
+
                 <div className="guild-perk-item">
                   <span className="perk-icon">🍵</span>
                   <div>
-                    <strong>Studio Potter Consultation</strong>
-                    <p>Complimentary 1-on-1 virtual design consultation for bespoke dining sets.</p>
+                    <strong>{lang === 'uz' ? 'Bosh Usta Bilan Shaxsiy Maslahat' : 'Studio Potter Consultation'}</strong>
+                    <p>{lang === 'uz' ? 'Xonadoningiz yoki stolingiz uchun maxsus o\'lchamdagi idishlar bo\'yicha bepul onlayn konsultatsiya.' : 'Complimentary 1-on-1 virtual design consultation for bespoke dining sets.'}</p>
                   </div>
                 </div>
+
                 <div className="guild-perk-item">
-                  <span className="perk-icon">✈️</span>
+                  <span className="perk-icon">🛡️</span>
                   <div>
-                    <strong>Insured White-Glove Transit</strong>
-                    <p>Zero courier fees on all bespoke orders worldwide.</p>
+                    <strong>{lang === 'uz' ? 'Abadiy Sopol Kafolati' : 'Lifetime Heirloom Assurance'}</strong>
+                    <p>{lang === 'uz' ? '1,320°C haroratda toshga aylangan ekologik toza tabiiy gil mahsulotlari.' : 'High-density vitrified stoneware crafted to endure generations of daily touch.'}</p>
                   </div>
                 </div>
               </div>
@@ -231,32 +287,70 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
           </div>
         )}
 
-        {/* Tab Content 3: Settings - EXACT USER REQUIREMENT */}
+        {/* TAB 3: SETTINGS (SOZLAMALAR - TIL HAM SHU YERDA) */}
         {activeTab === 'settings' && (
           <div className="profile-tab-panel">
             <form onSubmit={handleSaveSettings} className="settings-form">
+              {/* LANGUAGE SWITCHER INSIDE SETTINGS AS REQUESTED */}
               <div className="settings-section-title">
-                {t('settings_personal')}
+                🌐 {lang === 'uz' ? 'Tizim Tili va Valyuta' : 'Language & Display Currency'}
               </div>
 
               <div className="settings-grid">
                 <div>
-                  <label className="input-label">{t('settings_name')}</label>
+                  <label className="input-label">
+                    {lang === 'uz' ? 'Sayt Tili' : 'Interface Language'} *
+                  </label>
+                  <select
+                    className="input-field select-field"
+                    value={lang}
+                    onChange={(e) => setLang(e.target.value)}
+                  >
+                    <option value="en">English (Global)</option>
+                    <option value="uz">O'zbekcha (O'zbekiston)</option>
+                  </select>
+                  <span className="field-hint">
+                    {lang === 'uz' ? 'Barcha matnlar va narxlar tanlangan tilda ko\'rsatiladi' : 'Updates entire application interface immediately'}
+                  </span>
+                </div>
+
+                <div>
+                  <label className="input-label">
+                    {lang === 'uz' ? 'Ko\'rsatiladigan Valyuta' : 'Currency'}
+                  </label>
+                  <select
+                    className="input-field select-field"
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  >
+                    <option value="USD">USD ($) — US Dollar</option>
+                    <option value="UZS">UZS (so'm) — O'zbekiston so'mi</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="settings-section-title" style={{ marginTop: '0.5rem' }}>
+                👤 {lang === 'uz' ? 'Shaxsiy Ma\'lumotlar' : 'Personal Information'}
+              </div>
+
+              <div className="settings-grid">
+                <div>
+                  <label className="input-label">{t('settings_name')} *</label>
                   <input
                     className="input-field"
                     type="text"
-                    value={profile.name}
-                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
                 <div>
-                  <label className="input-label">{t('settings_phone')}</label>
+                  <label className="input-label">{t('settings_phone')} *</label>
                   <input
                     className="input-field"
                     type="tel"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     required
                   />
                 </div>
@@ -268,8 +362,8 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
                   <input
                     className="input-field"
                     type="email"
-                    value={profile.email}
-                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />
                 </div>
                 <div>
@@ -277,51 +371,22 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
                   <input
                     className="input-field"
                     type="text"
-                    value={profile.address}
-                    onChange={(e) => setProfile({ ...profile, address: e.target.value })}
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                   />
                 </div>
               </div>
 
-              <div className="settings-section-title" style={{ marginTop: '0.85rem' }}>
-                {t('settings_preferences')}
-              </div>
-
-              <div className="settings-grid">
-                <div>
-                  <label className="input-label">{t('settings_language')}</label>
-                  <select
-                    className="input-field"
-                    value={lang}
-                    onChange={(e) => setLang(e.target.value)}
-                  >
-                    <option value="en">English (Global)</option>
-                    <option value="uz">O'zbekcha (Uzbekistan)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="input-label">{t('settings_currency')}</label>
-                  <select
-                    className="input-field"
-                    value={profile.currency}
-                    onChange={(e) => setProfile({ ...profile, currency: e.target.value })}
-                  >
-                    <option value="USD">USD ($) — US Dollar</option>
-                    <option value="UZS">UZS (so'm) — O'zbekiston so'mi</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="settings-section-title" style={{ marginTop: '0.85rem' }}>
-                {t('settings_notifications')}
+              <div className="settings-section-title" style={{ marginTop: '0.5rem' }}>
+                🔔 {lang === 'uz' ? 'Xabarnomalar' : 'Notifications'}
               </div>
 
               <div className="settings-toggle-row">
                 <label className="toggle-switch-label">
                   <input
                     type="checkbox"
-                    checked={profile.notifEmail}
-                    onChange={(e) => setProfile({ ...profile, notifEmail: e.target.checked })}
+                    checked={formData.notifEmail}
+                    onChange={(e) => setFormData({ ...formData, notifEmail: e.target.checked })}
                   />
                   <span className="toggle-slider" />
                 </label>
@@ -332,8 +397,8 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
                 <label className="toggle-switch-label">
                   <input
                     type="checkbox"
-                    checked={profile.notifSms}
-                    onChange={(e) => setProfile({ ...profile, notifSms: e.target.checked })}
+                    checked={formData.notifSms}
+                    onChange={(e) => setFormData({ ...formData, notifSms: e.target.checked })}
                   />
                   <span className="toggle-slider" />
                 </label>
@@ -346,6 +411,27 @@ export default function UserProfileModal({ isOpen, onClose, onToast }) {
             </form>
           </div>
         )}
+
+        {/* Profile Footer: Logout Button */}
+        <div className="profile-footer-bar">
+          <button
+            className="profile-logout-btn"
+            onClick={() => {
+              logout();
+              onClose();
+              if (onToast) {
+                onToast('Logged Out', 'You have been signed out.', 'info');
+              }
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            <span>{lang === 'uz' ? 'Hisobdan Chiqish' : 'Sign Out'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
