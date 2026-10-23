@@ -78,12 +78,16 @@ const collectorReviews = [
 
 export default function Testimonials() {
   const [activeTab, setActiveTab] = useState('All');
+  const [isPaused, setIsPaused] = useState(false);
 
   const filterTabs = ['All', 'Architects', 'Culinary Masters', 'Private Collectors'];
 
   const filteredReviews = collectorReviews.filter(
     (r) => activeTab === 'All' || r.category === activeTab
   );
+
+  // Repeat reviews twice to create a seamless infinite loop
+  const marqueeItems = [...filteredReviews, ...filteredReviews];
 
   return (
     <section id="collector-reviews" className="testimonials-section">
@@ -106,23 +110,53 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* Filter Pills */}
-        <div className="testimonials-filter-bar">
-          {filterTabs.map((tab) => (
-            <button
-              key={tab}
-              className={`testimonial-pill ${activeTab === tab ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
+        {/* Filter Pills & Marquee Control */}
+        <div className="testimonials-controls-row">
+          <div className="testimonials-filter-bar">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab}
+                className={`testimonial-pill ${activeTab === tab ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
 
-        {/* Reviews Grid */}
-        <div className="testimonials-grid">
-          {filteredReviews.map((rev) => (
-            <div key={rev.id} className="testimonial-card">
+          <button
+            className={`marquee-pause-toggle ${isPaused ? 'paused' : ''}`}
+            onClick={() => setIsPaused(!isPaused)}
+            title={isPaused ? 'Play auto-scroll' : 'Pause auto-scroll'}
+          >
+            {isPaused ? (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                <span>Play Scroll</span>
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" />
+                  <rect x="14" y="4" width="4" height="16" />
+                </svg>
+                <span>Hover or Click to Pause</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Infinite Right-to-Left Auto-Scrolling Marquee Track */}
+      <div className="testimonials-marquee-wrapper">
+        <div
+          className={`testimonials-marquee-track ${isPaused ? 'is-paused' : ''}`}
+          style={{ animationDuration: `${Math.max(28, filteredReviews.length * 8)}s` }}
+        >
+          {marqueeItems.map((rev, index) => (
+            <div key={`${rev.id}-${index}`} className="testimonial-card">
               <div className="testimonial-card-top">
                 <div className="testimonial-stars">{'★'.repeat(rev.rating)}</div>
                 <div className="testimonial-verified-badge">

@@ -12,13 +12,13 @@ export const footerContent = {
       {
         id: 'phone',
         icon: 'Phone',
-        label: '+91 00000 00000',
-        href: 'tel:+910000000000',
+        label: '+81 75 741 8820',
+        href: 'tel:+81757418820',
       },
       {
         id: 'location',
         icon: 'MapPin',
-        label: 'India',
+        label: 'Kyoto, Japan',
         href: null,
       },
     ],

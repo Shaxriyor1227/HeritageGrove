@@ -61,14 +61,20 @@
   font-size: 0.84rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.filter-pill.active,
 .filter-pill:hover {
+  background: rgba(23, 90, 103, 0.08);
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.filter-pill.active {
   background: var(--ink);
   color: #FAF7F4;
   border-color: var(--ink);
+  box-shadow: 0 4px 14px rgba(23, 90, 103, 0.2);
 }
 
 .toolbar-actions {

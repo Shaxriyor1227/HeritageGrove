@@ -74,11 +74,14 @@
 
 .contact-list a {
   text-decoration: none;
+  transition: color 0.22s ease, transform 0.22s ease;
+  display: inline-flex;
+  align-items: center;
 }
 
 .contact-list a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: #0E3E47;
+  transform: translateX(4px);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,7 +5,7 @@ export default function Toast({ toasts, onDismiss }) {
   if (!toasts || toasts.length === 0) return null;
 
   return (
-    <div className="toast-container" role="region" aria-live="polite">
+    <aside className="toast-container" role="region" aria-live="polite" aria-label="Notifications">
       {toasts.map((toast) => (
         <div key={toast.id} className={`toast-item ${toast.type || 'info'}`}>
           <div className="toast-icon">
@@ -30,18 +30,18 @@ export default function Toast({ toasts, onDismiss }) {
 
           <div className="toast-content">
             {toast.title && <div className="toast-title">{toast.title}</div>}
-            <div>{toast.message}</div>
+            <div className="toast-message">{toast.message}</div>
           </div>
 
           <button
             className="toast-close"
             onClick={() => onDismiss(toast.id)}
-            aria-label="Close notification"
+            aria-label="Dismiss notification"
           >
             ×
           </button>
         </div>
       ))}
-    </div>
+    </aside>
   );
 }

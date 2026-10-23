@@ -53,11 +53,11 @@ export default function App() {
 
   const addToast = (title, message, type = 'info') => {
     const id = Date.now() + Math.random();
-    setToasts((prev) => [...prev, { id, title, message, type }]);
+    setToasts((prev) => [...prev.slice(-1), { id, title, message, type }]);
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 4500);
+    }, 3800);
   };
 
   const dismissToast = (id) => {
